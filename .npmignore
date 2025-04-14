@@ -1,0 +1,31 @@
+# Source
+*.ts
+!*.d.ts
+
+# Development files
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+*.log
+*.tgz
+
+# Build process
+tsconfig.json
+screenshot.png
+
+# Tests
+test/
+coverage/
+*.test.ts
+*.spec.ts
+
+# Documentation
+docs/
+examples/
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Dependencies
+node_modules/ 
