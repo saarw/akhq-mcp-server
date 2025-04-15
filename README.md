@@ -1,5 +1,5 @@
 # akhq-mcp-server
-Experimental Model Context Protocol server for Kafka monitoring tool AKHQ. Helps LLMs with MCP support, such as Claude and Cursor, connect to and work beside the user in AKHQ.
+Experimental Model Context Protocol (MCP) server for Kafka monitoring tool AKHQ. Helps LLMs with MCP support, such as Claude and Cursor, connect to and work beside the user in AKHQ.
 <img src="screenshot.png" alt="Screenshot of MCP server in use in Cursor" width="800"/>
 ## Installation
 Make sure you have Node installed.
