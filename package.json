@@ -39,5 +39,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "shx": "^0.4.0",
+    "typescript": "^5.8.3"
   }
 }

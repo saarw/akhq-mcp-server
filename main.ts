@@ -282,7 +282,7 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
@@ -290,7 +290,7 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/connect/{connectId}', validatedParams);
       return callApi(endpoint, 'GET');
@@ -317,14 +317,20 @@ registerTool(
   {
     cluster: z.string(),
     connectId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      name: z.string().optional(),
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     connectId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      name: z.string().optional(),
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/connect/{connectId}', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -418,7 +424,9 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     type: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
@@ -426,7 +434,9 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     type: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/connect/{connectId}/plugins/{type}/validate', validatedParams);
       return callApi(endpoint, 'PUT', validatedParams, 'application/json');
@@ -556,7 +566,9 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     name: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
@@ -564,7 +576,9 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     name: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/connect/{connectId}/{name}/configs', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -728,7 +742,7 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     name: z.string(),
-    taskId: z.any()
+    taskId: z.number()
   },
   async (params) => {
     try {
@@ -736,7 +750,7 @@ registerTool(
     cluster: z.string(),
     connectId: z.string(),
     name: z.string(),
-    taskId: z.any()
+    taskId: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/connect/{connectId}/{name}/tasks/{taskId}/restart', validatedParams);
       return callApi(endpoint, 'GET');
@@ -763,14 +777,14 @@ registerTool(
   {
     cluster: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/group', validatedParams);
       return callApi(endpoint, 'GET');
@@ -796,31 +810,13 @@ registerTool(
   'Retrieve consumer group for list of topics',
   {
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]).nullable().optional()
+    topics: z.array(z.string()).nullable().optional()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]).nullable().optional()
+    topics: z.array(z.string()).nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/group/topics', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1007,14 +1003,22 @@ registerTool(
   {
     cluster: z.string(),
     groupName: z.string(),
-    body: z.array(z.object())
+    body: z.array(z.object({
+      topic: z.string().optional(),
+      partition: z.number().optional(),
+      offset: z.number().optional()
+    }))
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     groupName: z.string(),
-    body: z.array(z.object())
+    body: z.array(z.object({
+      topic: z.string().optional(),
+      partition: z.number().optional(),
+      offset: z.number().optional()
+    }))
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/group/{groupName}/offsets', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -1109,14 +1113,18 @@ registerTool(
   {
     cluster: z.string(),
     ksqlDbId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      sql: z.string().optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     ksqlDbId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      sql: z.string().optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/ksqldb/{ksqlDbId}/execute', validatedParams);
       return callApi(endpoint, 'PUT', validatedParams, 'application/json');
@@ -1176,7 +1184,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
@@ -1184,7 +1192,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/ksqldb/{ksqlDbId}/queries', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1211,14 +1219,20 @@ registerTool(
   {
     cluster: z.string(),
     ksqlDbId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      sql: z.string().optional(),
+      properties: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     ksqlDbId: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      sql: z.string().optional(),
+      properties: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/ksqldb/{ksqlDbId}/queries/pull', validatedParams);
       return callApi(endpoint, 'PUT', validatedParams, 'application/json');
@@ -1246,7 +1260,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
@@ -1254,7 +1268,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/ksqldb/{ksqlDbId}/streams', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1282,7 +1296,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
@@ -1290,7 +1304,7 @@ registerTool(
     cluster: z.string(),
     ksqlDbId: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/ksqldb/{ksqlDbId}/tables', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1376,13 +1390,13 @@ registerTool(
   'Retrieve a nodes',
   {
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/node/{nodeId}', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1408,13 +1422,13 @@ registerTool(
   'List all configs for a node',
   {
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/node/{nodeId}/configs', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1440,15 +1454,19 @@ registerTool(
   'Update configs for a node',
   {
     cluster: z.string(),
-    nodeId: z.any(),
-    body: z.record(z.any())
+    nodeId: z.number(),
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    nodeId: z.any(),
-    body: z.record(z.any())
+    nodeId: z.number(),
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/node/{nodeId}/configs', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -1474,13 +1492,13 @@ registerTool(
   'List all logs for a node',
   {
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    nodeId: z.any()
+    nodeId: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/node/{nodeId}/logs', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1507,14 +1525,14 @@ registerTool(
   {
     cluster: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     search: z.string().nullable().optional(),
-    page: z.any().nullable().optional()
+    page: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/schema', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1540,13 +1558,39 @@ registerTool(
   'Create a new schema',
   {
     cluster: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      id: z.number().optional(),
+      subject: z.string(),
+      version: z.number(),
+      compatibilityLevel: z.string().optional(),
+      schema: z.string().optional(),
+      schemaType: z.string().optional(),
+      references: z.array(z.object({
+      name: z.string().optional(),
+      subject: z.string().optional(),
+      version: z.number().optional()
+    })).optional(),
+      exception: z.string().optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      id: z.number().optional(),
+      subject: z.string(),
+      version: z.number(),
+      compatibilityLevel: z.string().optional(),
+      schema: z.string().optional(),
+      schemaType: z.string().optional(),
+      references: z.array(z.object({
+      name: z.string().optional(),
+      subject: z.string().optional(),
+      version: z.number().optional()
+    })).optional(),
+      exception: z.string().optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/schema', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -1572,14 +1616,14 @@ registerTool(
   'Find a subject by the schema id In case of several subjects matching the schema id, we use the topic name to get the most relevant subject that matches the topic name (TopicNameStrategy). If there is no topic or if the topic doesn\'t match any subject, return the first subject that matches the schema id.',
   {
     cluster: z.string().describe('- The cluster name'),
-    id: z.any().describe('- The schema id'),
+    id: z.number().describe('- The schema id'),
     topic: z.string().nullable().optional().describe('- (Optional) The topic name')
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string().describe('- The cluster name'),
-    id: z.any().describe('- The schema id'),
+    id: z.number().describe('- The schema id'),
     topic: z.string().nullable().optional().describe('- (Optional) The topic name')
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/schema/id/{id}', validatedParams);
@@ -1671,14 +1715,40 @@ registerTool(
   {
     cluster: z.string(),
     subject: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      id: z.number().optional(),
+      subject: z.string(),
+      version: z.number(),
+      compatibilityLevel: z.string().optional(),
+      schema: z.string().optional(),
+      schemaType: z.string().optional(),
+      references: z.array(z.object({
+      name: z.string().optional(),
+      subject: z.string().optional(),
+      version: z.number().optional()
+    })).optional(),
+      exception: z.string().optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     subject: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      id: z.number().optional(),
+      subject: z.string(),
+      version: z.number(),
+      compatibilityLevel: z.string().optional(),
+      schema: z.string().optional(),
+      schemaType: z.string().optional(),
+      references: z.array(z.object({
+      name: z.string().optional(),
+      subject: z.string().optional(),
+      version: z.number().optional()
+    })).optional(),
+      exception: z.string().optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/schema/{subject}', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -1769,14 +1839,14 @@ registerTool(
   {
     cluster: z.string(),
     subject: z.string(),
-    version: z.any()
+    version: z.number()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     subject: z.string(),
-    version: z.any()
+    version: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/schema/{subject}/version/{version}', validatedParams);
       return callApi(endpoint, 'DELETE');
@@ -1832,53 +1902,17 @@ registerTool(
   'Tail for data on multiple topic',
   {
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]),
+    topics: z.array(z.string()),
     search: z.string().nullable().optional(),
-    after: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]).nullable().optional()
+    after: z.array(z.string()).nullable().optional()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]),
+    topics: z.array(z.string()),
     search: z.string().nullable().optional(),
-    after: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ]).nullable().optional()
+    after: z.array(z.string()).nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/tail/sse', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1906,8 +1940,8 @@ registerTool(
     cluster: z.string(),
     search: z.string().nullable().optional(),
     show: z.string().nullable().optional(),
-    page: z.any().nullable().optional(),
-    uiPageSize: z.any().nullable().optional()
+    page: z.number().nullable().optional(),
+    uiPageSize: z.number().nullable().optional()
   },
   async (params) => {
     try {
@@ -1915,8 +1949,8 @@ registerTool(
     cluster: z.string(),
     search: z.string().nullable().optional(),
     show: z.string().nullable().optional(),
-    page: z.any().nullable().optional(),
-    uiPageSize: z.any().nullable().optional()
+    page: z.number().nullable().optional(),
+    uiPageSize: z.number().nullable().optional()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic', validatedParams);
       return callApi(endpoint, 'GET');
@@ -1942,13 +1976,23 @@ registerTool(
   'Create a topic',
   {
     cluster: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      name: z.string().optional(),
+      partition: z.number().nullable().optional(),
+      replication: z.number().nullable().optional(),
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      name: z.string().optional(),
+      partition: z.number().nullable().optional(),
+      replication: z.number().nullable().optional(),
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -1974,31 +2018,13 @@ registerTool(
   'Retrieve the last record for a list of topics',
   {
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ])
+    topics: z.array(z.string())
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
-    topics: z.union([
-                z.array(z.string()),
-                z.string().transform((val) => {
-                  try {
-                    return JSON.parse(val);
-                  } catch (e) {
-                    throw new Error('Invalid JSON string for array parameter');
-                  }
-                })
-              ])
+    topics: z.array(z.string())
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic/last-record', validatedParams);
       return callApi(endpoint, 'GET');
@@ -2185,14 +2211,18 @@ registerTool(
   {
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      configs: z.record(z.any()).optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic/{topicName}/configs', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -2220,7 +2250,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2237,7 +2267,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2273,14 +2303,40 @@ registerTool(
   {
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      value: z.string().nullable().optional(),
+      key: z.string().nullable().optional(),
+      partition: z.number().nullable().optional(),
+      timestamp: z.string().nullable().optional(),
+      headers: z.array(z.object({
+      key: z.string(),
+      value: z.string()
+    })).optional(),
+      keySchema: z.string().nullable().optional(),
+      valueSchema: z.string().nullable().optional(),
+      multiMessage: z.boolean().optional(),
+      keyValueSeparator: z.string().nullable().optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      value: z.string().nullable().optional(),
+      key: z.string().nullable().optional(),
+      partition: z.number().nullable().optional(),
+      timestamp: z.string().nullable().optional(),
+      headers: z.array(z.object({
+      key: z.string(),
+      value: z.string()
+    })).optional(),
+      keySchema: z.string().nullable().optional(),
+      valueSchema: z.string().nullable().optional(),
+      multiMessage: z.boolean().optional(),
+      keyValueSeparator: z.string().nullable().optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic/{topicName}/data', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
@@ -2307,14 +2363,20 @@ registerTool(
   {
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      partition: z.number().optional(),
+      key: z.string().optional()
+    })
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     topicName: z.string(),
-    body: z.record(z.any())
+    body: z.object({
+      partition: z.number().optional(),
+      key: z.string().optional()
+    })
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic/{topicName}/data', validatedParams);
       return callApi(endpoint, 'DELETE');
@@ -2342,7 +2404,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2359,7 +2421,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2427,16 +2489,16 @@ registerTool(
   {
     cluster: z.string(),
     topicName: z.string(),
-    partition: z.any(),
-    offset: z.any()
+    partition: z.number(),
+    offset: z.number()
   },
   async (params) => {
     try {
       const validatedParams = z.object({
     cluster: z.string(),
     topicName: z.string(),
-    partition: z.any(),
-    offset: z.any()
+    partition: z.number(),
+    offset: z.number()
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{cluster}/topic/{topicName}/data/record/{partition}/{offset}', validatedParams);
       return callApi(endpoint, 'GET');
@@ -2464,7 +2526,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2481,7 +2543,7 @@ registerTool(
     cluster: z.string(),
     topicName: z.string(),
     after: z.string().nullable().optional(),
-    partition: z.any().nullable().optional(),
+    partition: z.number().nullable().optional(),
     sort: z.string().nullable().optional(),
     timestamp: z.string().nullable().optional(),
     endTimestamp: z.string().nullable().optional(),
@@ -2713,7 +2775,10 @@ registerTool(
     fromTopicName: z.string(),
     toCluster: z.string(),
     toTopicName: z.string(),
-    body: z.array(z.object())
+    body: z.array(z.object({
+      partition: z.number().optional(),
+      offset: z.number().optional()
+    }))
   },
   async (params) => {
     try {
@@ -2722,7 +2787,10 @@ registerTool(
     fromTopicName: z.string(),
     toCluster: z.string(),
     toTopicName: z.string(),
-    body: z.array(z.object())
+    body: z.array(z.object({
+      partition: z.number().optional(),
+      offset: z.number().optional()
+    }))
   }).parse(params);
       const endpoint = parameterizeEndpoint('/api/{fromCluster}/topic/{fromTopicName}/copy/{toCluster}/topic/{toTopicName}', validatedParams);
       return callApi(endpoint, 'POST', validatedParams, 'application/json');
