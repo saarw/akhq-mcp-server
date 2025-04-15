@@ -1,9 +1,12 @@
 {
   "name": "akhq-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Model Context Protocol (MCP) server implementation for AKHQ - GUI for Apache Kafka",
   "main": "dist/main.js",
   "type": "module",
+  "bin": {
+    "akhq-mcp-server": "./dist/main.js"
+  },
   "files": [
     "dist",
     "README.md",
